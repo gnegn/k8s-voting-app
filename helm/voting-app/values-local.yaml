@@ -1,0 +1,16 @@
+# ── Kind / Local ────────────────────────────────
+
+vote:
+  image: voting-vote:local
+
+result:
+  image: voting-result:local
+
+worker:
+  image: voting-worker:local
+
+postgres:
+  storageClassName: standard
+
+ingress:
+  enabled: false

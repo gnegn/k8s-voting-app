@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: voting-app
+  namespace: argocd
+  # Clear all resources in cluster
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # ── Source ────────────────────────────────
+  source:
+    repoURL: https://github.com/gnegn/k8s-voting-app.git
+    targetRevision: HEAD    # last branch commit 
+    path: helm/voting-app   # helm chart directory
+
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-local.yaml
+
+  # ── Destiantion ─────────────────────────────────────────
+  destination:
+    server: https://kubernetes.default.svc   # this cluster
+    namespace: voting
+
+  # ── Sync policy ────────────────────────────────
+  syncPolicy:
+    automated:
+      prune: true      # clear resources removed from git
+      selfHeal: true   # revert to git if manual changes were made
+    syncOptions:
+      - CreateNamespace=true

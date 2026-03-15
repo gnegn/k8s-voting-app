@@ -1,0 +1,71 @@
+# ── Спільні дефолти для всіх середовищ ───────────────────────
+
+vote:
+  image: voting-vote:local
+  replicas: 2
+  port: 80
+  env:
+    redisHost: redis
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+
+result:
+  image: voting-result:local
+  replicas: 2
+  port: 80
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+
+worker:
+  image: voting-worker:local
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+redis:
+  image: redis:7.2-alpine
+  port: 6379
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+
+postgres:
+  image: postgres:16-alpine
+  port: 5432
+  user: postgres
+  password: postgres
+  db: votes
+  storageClassName: standard
+  storageSize: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+ingress:
+  enabled: false
+  className: nginx
+  voteHost: vote.local
+  resultHost: result.local

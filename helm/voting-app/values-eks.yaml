@@ -1,0 +1,29 @@
+# ── AWS EKS ────────────────────────────────────────
+
+vote:
+  image: ghcr.io/YOUR_USERNAME/voting-vote:latest
+  replicas: 3
+  resources:
+    requests:
+      cpu: 200m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+result:
+  image: ghcr.io/YOUR_USERNAME/voting-result:latest
+  replicas: 3
+
+worker:
+  image: ghcr.io/YOUR_USERNAME/voting-worker:latest
+
+postgres:
+  storageClassName: gp2    # AWS EBS storage class
+  storageSize: 10Gi
+
+ingress:
+  enabled: true
+  className: alb           # AWS ALB ingress controller
+  voteHost: vote.yourdomain.com
+  resultHost: result.yourdomain.com

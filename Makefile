@@ -141,9 +141,11 @@ monitoring-dashboard: ## Load Grafana dashboard
 	kubectl create configmap voting-app-dashboard \
 		--from-file=voting-app.json=monitoring/dashboards/voting-app.json \
 		--namespace monitoring \
-		--dry-run=client -o yaml | kubectl apply -f -
-
-monitoring-grafana: ## Open Grafana → localhost:3000
+		--dry-run=client -o yaml | \
+	kubectl label --local -f - grafana_dashboard=1 --dry-run=client -o yaml | \
+	kubectl apply -f -
+	
+monitoring-port-forward: ## Open Grafana → localhost:3000
 	kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80
 
 monitoring-prometheus: ## Open Prometheus → localhost:9090

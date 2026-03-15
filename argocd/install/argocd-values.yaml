@@ -6,3 +6,13 @@ server:
   service:
     type: NodePort
     nodePortHttp: 30002    # same as kind-config.yaml extraPortMappings
+
+repoServer:
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    failureThreshold: 5
+  livenessProbe:
+    initialDelaySeconds: 60 
+    periodSeconds: 15
+    failureThreshold: 5

@@ -1,0 +1,63 @@
+{
+  "title": "Voting App",
+  "uid": "voting-app",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "panels": [
+    {
+      "title": "Total Votes",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(kube_pod_container_info{namespace=\"voting\"}) or vector(0)",
+          "legendFormat": "Pods Running"
+        }
+      ]
+    },
+    {
+      "title": "Pod Restarts",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(kube_pod_container_status_restarts_total{namespace=\"voting\"})",
+          "legendFormat": "Total Restarts"
+        }
+      ]
+    },
+    {
+      "title": "CPU Usage by Pod",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"voting\", container!=\"\"}[5m])) by (pod)",
+          "legendFormat": "{{ pod }}"
+        }
+      ]
+    },
+    {
+      "title": "Memory Usage by Pod",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(container_memory_working_set_bytes{namespace=\"voting\", container!=\"\"}) by (pod)",
+          "legendFormat": "{{ pod }}"
+        }
+      ]
+    },
+    {
+      "title": "Pod Status",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "expr": "kube_pod_status_phase{namespace=\"voting\"}",
+          "legendFormat": "{{ pod }} - {{ phase }}"
+        }
+      ]
+    }
+  ]
+}

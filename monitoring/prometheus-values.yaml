@@ -1,0 +1,51 @@
+grafana:
+  adminPassword: admin
+
+  service:
+    type: NodePort
+    nodePort: 30003
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: voting-app
+          orgId: 1
+          folder: "Voting App"
+          type: file
+          options:
+            path: /var/lib/grafana/dashboards/voting-app
+
+  dashboardsConfigMaps:
+    voting-app: voting-app-dashboard
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+    retention: 24h
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+alertmanager:
+  enabled: false
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false

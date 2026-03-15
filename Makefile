@@ -111,10 +111,13 @@ helm-uninstall: ## Uninstall helm release
 
 # ── Argo CD ───────────────────────────────────────────
 argocd-install: ## Install Argo CD in the cluster
-	kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-	kubectl rollout status deploy/argocd-server -n argocd --timeout=120s
-
+	helm repo add argo https://argoproj.github.io/argo-helm
+	helm repo update
+	helm upgrade --install argocd argo/argo-cd \
+		--namespace argocd --create-namespace \
+		--values argocd/install/argocd-values.yaml \
+		--wait
+		
 argocd-password: ## Get initial Argo CD password
 	kubectl -n argocd get secret argocd-initial-admin-secret \
 		-o jsonpath="{.data.password}" | base64 -d && echo
@@ -133,6 +136,12 @@ monitoring-install: ## Install kube-prometheus-stack
 		--namespace monitoring --create-namespace \
 		--values monitoring/prometheus-values.yaml \
 		--wait
+
+monitoring-dashboard: ## Load Grafana dashboard
+	kubectl create configmap voting-app-dashboard \
+		--from-file=voting-app.json=monitoring/dashboards/voting-app.json \
+		--namespace monitoring \
+		--dry-run=client -o yaml | kubectl apply -f -
 
 monitoring-grafana: ## Open Grafana → localhost:3000
 	kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80

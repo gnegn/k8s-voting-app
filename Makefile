@@ -28,7 +28,7 @@ help:
 		{ printf "  \033[36m%-35s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 	@echo ""
 
-kind-up: ## Start build → cluster → load → deploy → status
+up: ## Start build → cluster → load → deploy → status
 	$(MAKE) docker-build
 	$(MAKE) kind-create
 	$(MAKE) docker-load
@@ -117,16 +117,14 @@ argocd-install: ## Install Argo CD in the cluster
 		--namespace argocd --create-namespace \
 		--values argocd/install/argocd-values.yaml \
 		--wait
-		
+	kubectl apply -f argocd/app-of-apps.yaml
+
 argocd-password: ## Get initial Argo CD password
 	kubectl -n argocd get secret argocd-initial-admin-secret \
 		-o jsonpath="{.data.password}" | base64 -d && echo
 
 argocd-port-forward: ## Open Argo CD UI → localhost:8080
 	kubectl port-forward svc/argocd-server -n argocd 8080:443
-
-argocd-apply: ## Apply Argo CD Application
-	kubectl apply -f argocd/apps/application.yaml
 
 # ── Monitoring ────────────────────────────────────────
 monitoring-install: ## Install kube-prometheus-stack
@@ -144,7 +142,7 @@ monitoring-dashboard: ## Load Grafana dashboard
 		--dry-run=client -o yaml | \
 	kubectl label --local -f - grafana_dashboard=1 --dry-run=client -o yaml | \
 	kubectl apply -f -
-	
+
 monitoring-port-forward: ## Open Grafana → localhost:3000
 	kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80
 

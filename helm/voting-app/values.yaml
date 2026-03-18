@@ -69,3 +69,4 @@ ingress:
   className: nginx
   voteHost: vote.local
   resultHost: result.local
+  annotations: {}

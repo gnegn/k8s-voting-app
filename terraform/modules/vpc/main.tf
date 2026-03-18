@@ -10,8 +10,8 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name        = "${var.cluster_name}-vpc"
-    Environment = var.environment
+    Name                                        = "${var.cluster_name}-vpc"
+    Environment                                 = var.environment
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
 }
@@ -35,8 +35,8 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.cluster_name}-public-${var.azs[count.index]}"
-    Environment = var.environment
+    Name                                        = "${var.cluster_name}-public-${var.azs[count.index]}"
+    Environment                                 = var.environment
     "kubernetes.io/role/elb"                    = "1"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
@@ -51,8 +51,8 @@ resource "aws_subnet" "private" {
   availability_zone = var.azs[count.index]
 
   tags = {
-    Name        = "${var.cluster_name}-private-${var.azs[count.index]}"
-    Environment = var.environment
+    Name                                        = "${var.cluster_name}-private-${var.azs[count.index]}"
+    Environment                                 = var.environment
     "kubernetes.io/role/internal-elb"           = "1"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
@@ -97,7 +97,7 @@ resource "aws_route_table" "private" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main.id 
+    nat_gateway_id = aws_nat_gateway.main.id
   }
 
   tags = {

@@ -1,7 +1,7 @@
-# ── AWS EKS ────────────────────────────────────────
+# ── AWS EKS ───────────────────────────────────────────────────
 
 vote:
-  image: ghcr.io/YOUR_USERNAME/voting-vote:latest
+  image: ghcr.io/gnegn/voting-vote:latest
   replicas: 3
   resources:
     requests:
@@ -12,18 +12,37 @@ vote:
       memory: 256Mi
 
 result:
-  image: ghcr.io/YOUR_USERNAME/voting-result:latest
+  image: ghcr.io/gnegn/voting-result:latest
   replicas: 3
+  resources:
+    requests:
+      cpu: 200m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
 
 worker:
-  image: ghcr.io/YOUR_USERNAME/voting-worker:latest
+  image: ghcr.io/gnegn/voting-worker:latest
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
 
 postgres:
-  storageClassName: gp2    # AWS EBS storage class
+  storageClassName: gp2
   storageSize: 10Gi
 
 ingress:
   enabled: true
-  className: alb           # AWS ALB ingress controller
+  className: alb
   voteHost: vote.yourdomain.com
   resultHost: result.yourdomain.com
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'

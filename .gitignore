@@ -1,0 +1,52 @@
+# ── Environment ───────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Terraform ─────────────────────────────────────────────────
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+terraform/bootstrap.sh
+crash.log
+override.tf
+override.tf.json
+
+# ── Kubernetes secrets ────────────────────────────────────────
+**/*secret*.yaml
+**/*secrets*.yaml
+**/*-secret.yaml
+
+# ── Node ──────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# ── Go ────────────────────────────────────────────────────────
+vendor/
+*.test
+
+# ── Docker ────────────────────────────────────────────────────
+*.tar
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDE ───────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Helm ──────────────────────────────────────────────────────
+*.tgz
+charts/
